@@ -1,5 +1,63 @@
-{{!-- The following component displays Ember's default welcome message. --}}
-{{welcome-page}}
-{{!-- Feel free to remove this! --}}
+{{#paper-sidenav-container class="site-nav-container"}}
+  {{#paper-sidenav class="md-whiteframe-z2 site-sidenav" locked-open="gt-sm" open=leftSideBarOpen onToggle=(action
+    (mut leftSideBarOpen))}}
+    {{#paper-toolbar class="site-content-toolbar"}}
+      <div class="layout-column md-padding">
+        <div class="layout-row">
+          <div>
+            <strong>sangha</strong>
+          </div>
+          <div>
+            <small>@CCT</small>
+          </div>
+        </div>
+        <div>
+          {{#if currentUser.user}}
+            <small><a href="#" {{action 'invalidateSession'}}>{{currentUser.user.email}}</a></small>
+          {{else}}
+            <small>{{#link-to 'login'}}Login{{/link-to}}</small>
+          {{/if}}
+        </div>
+      </div>
+    {{/paper-toolbar}}
 
-{{outlet}}
+    {{#paper-content class="flex"}}
+      {{#paper-list class="flex"}}
+        {{#menu-item active=(is-active "projects." currentRouteName) href=(href-to "projects.all")}}Projects{{/menu-item}}
+
+        {{#if currentUser.user.admin}}
+          {{#menu-item active=(is-active "payments.show" currentRouteName) onClick=(action "toggleExpandedItem" "payments") canExpand=true expanded=paymentsExpanded}}
+            Payments
+          {{/menu-item}}
+
+          <div class="submenu">
+            {{#liquid-if paymentsExpanded}}
+              {{#submenu-item active=(is-active "payments.pending" currentRouteName) href=(href-to "payments.pending")}}Incoming{{/submenu-item}}
+              {{#submenu-item active=(is-active "payments.outgoing" currentRouteName) href=(href-to "payments.outgoing")}}Outgoing{{/submenu-item}}
+            {{/liquid-if}}
+          </div>
+        {{/if}}
+
+        {{#menu-item active=(is-active "users" currentRouteName) href=(href-to "users")}}Users{{/menu-item}}
+        {{#menu-item active=(is-active "search." currentRouteName) href=(href-to "search")}}Search{{/menu-item}}
+      {{/paper-list}}
+    {{/paper-content}}
+
+    <div class="layout-row layout-align-center">
+      <a href="https://techcultivation.org">
+        <h5>sangha, AGPL 3.0</h5>
+      </a>
+    </div>
+
+  {{/paper-sidenav}}
+
+  <div id="main" class="flex layout-column" tabindex="-1" role="main">
+    {{outlet}}
+  </div>
+{{/paper-sidenav-container}}
+
+{{#if notifications.shown}}
+  {{#paper-toast duration=3000 onClose=(action "closeToast") as |toast|}}
+    {{#toast.text}}{{notifications.message}}{{/toast.text}}
+  {{/paper-toast}}
+{{/if}}
