@@ -1,0 +1,63 @@
+{{#page-toolbar}}
+    <h2>
+        Projects
+    </h2>
+    <span class="flex"></span>
+    {{#paper-button mini=true aria-label="New Project" onClick=(action "openNewProjectDialog")}}
+        {{paper-icon "add"}}
+    {{/paper-button}}
+{{/page-toolbar}}
+
+{{#paper-content}}
+    <div>
+        {{#paper-list}}
+
+            {{#each projects as |project|}}
+                {{#paper-item class="md-3-line md-long-text" onClick=(action "goToProject" project) as |controls|}}
+                    <img src={{project.logo}} alt={{project.name}} class="md-avatar">
+                    <div class="md-list-item-text">
+                        <h3>{{project.name}}</h3>
+                        <p>{{project.summary}}</p>
+                    </div>
+                    <div class="md-secondary-container">
+                        <h4>{{format-money (div project.balance 100) symbol="€" format="%v %s"}}</h4>
+                    </div>
+                {{/paper-item}}
+            {{/each}}
+
+        {{/paper-list}}
+    </div>
+{{/paper-content}}
+
+{{#if showPromptDialog}}
+    {{#paper-dialog class="flex-50" fullscreen=true onClose=(action "closePromptDialog" "cancel")}}
+
+        {{#paper-dialog-content}}
+            <h2 class="md-title">Create a Project</h2>
+            <div class="layout-row">
+                <div class="layout-column flex-75">
+                    {{paper-input label="Project Name" placeholder="Name" autofocus=true value=projectName onChange=(action (mut projectName))}}
+                </div>
+                <div class="flex"></div>
+                <div class="layout-column flex-20">
+                    {{paper-input placeholder="License" value=projectLicense onChange=(action (mut projectLicense))}}
+                </div>
+            </div>
+            <div class="layout-row">
+                <div class="layout-column flex">
+                    {{paper-input label="Description" textarea=true block=true maxlength=512 placeholder="Description" value=projectDescription onChange=(action (mut projectDescription))}}
+                    {{paper-input label="Website" placeholder="Website" value=projectWebsite onChange=(action (mut projectWebsite))}}
+                    {{paper-input label="Repository" placeholder="Repository" value=projectRepository onChange=(action (mut projectRepository))}}
+                </div>
+            </div>
+        {{/paper-dialog-content}}
+
+        {{#paper-dialog-actions class="layout-row"}}
+            <span class="flex"></span>
+            {{#paper-button onClick=(action "closePromptDialog" "cancel")}}Cancel{{/paper-button}}
+            {{#paper-button disabled=dialogNotValid raised=true primary=true onClick=(action "closePromptDialog" "ok")}}Create
+                Project{{/paper-button}}
+        {{/paper-dialog-actions}}
+
+    {{/paper-dialog}}
+{{/if}}
