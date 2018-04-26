@@ -1,0 +1,12 @@
+{{#paper-toolbar class="page-main-toolbar" as |toolbar|}}
+  {{#toolbar.tools}}
+    {{#paper-sidenav-toggle as |toggleAction|}}
+      {{#paper-button class="hide-gt-sm" onClick=(action toggleAction) iconButton=true}}
+        {{paper-icon "menu"}}
+      {{/paper-button}}
+    {{/paper-sidenav-toggle}}
+
+    {{yield}}
+
+  {{/toolbar.tools}}
+{{/paper-toolbar}}
