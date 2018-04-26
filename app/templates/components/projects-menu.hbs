@@ -1,0 +1,11 @@
+{{#paper-tabs selected=currentRouteName borderBottom=true onChange=(action "noop") as |tabs|}}
+    {{#tabs.tab value="projects.show" href=(href-to "projects.show" project)}}
+        Overview
+    {{/tabs.tab}}
+    {{#tabs.tab value="projects.stats" href=(href-to "projects.stats" project)}}
+        Statistics
+    {{/tabs.tab}}
+    {{#tabs.tab value="projects.settings" href=(href-to "projects.settings" project)}}
+        Settings
+    {{/tabs.tab}}
+{{/paper-tabs}}
