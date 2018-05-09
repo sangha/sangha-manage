@@ -1,0 +1,23 @@
+{{#paper-item class="md-3-line md-long-text" onClick=(action "goToTransaction" transaction) as |controls|}}
+    {{#if (gt transaction.amount 0)}}
+        {{paper-icon "assignment_turned_in" size=48}}
+    {{else}}
+        {{paper-icon "assignment_return" size=48}}
+    {{/if}}
+    <div class="md-list-item-text">
+        {{#if (or transaction.from_budget_id.name transaction.to_budget_id.name)}}
+            {{#if transaction.from_budget_id.name}}
+                <h3>Received from {{transaction.from_budget_id.project.name}} - {{transaction.from_budget_id.name}}</h3>
+            {{else if transaction.to_budget_id.name}}
+                <h3>Sent to {{transaction.to_budget_id.project.name}} - {{transaction.to_budget_id.name}}</h3>
+            {{/if}}
+        {{else}}
+            <h3>External payment</h3>
+        {{/if}}
+        <p>{{newline-br text=transaction.purpose}}</p>
+        <p>{{transaction.created_at}}</p>
+    </div>
+    <div class="md-secondary-container">
+        <h4>{{format-money (div transaction.amount 100) symbol="€" format="%v %s"}}</h4>
+    </div>
+{{/paper-item}}
