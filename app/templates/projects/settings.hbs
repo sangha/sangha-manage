@@ -1,0 +1,38 @@
+{{#page-toolbar}}
+    <h2>
+        {{project.name}}
+        {{paper-icon "chevron-right"}}
+        Settings
+    </h2>
+{{/page-toolbar}}
+
+{{projects-menu currentRouteName='projects.settings' project=project.id}}
+
+{{#paper-content class="md-padding"}}
+    <div class="md-padding">
+        <div class="layout-row">
+            <div class="layout-column flex-75">
+                {{paper-input label="Project Name" placeholder="Name" autofocus=true value=project.name onChange=(action (mut project.name))}}
+            </div>
+            <div class="flex"></div>
+            <div class="layout-column flex-20">
+                {{paper-input placeholder="License" value=project.license onChange=(action (mut project.license))}}
+            </div>
+        </div>
+        <div class="layout-row">
+            <div class="layout-column flex">
+                {{paper-input label="Description" textarea=true block=true maxlength=512 placeholder="Description" value=project.summary onChange=(action (mut project.summary))}}
+                {{paper-input label="Website" placeholder="Website" value=project.website onChange=(action (mut project.website))}}
+                {{paper-input label="Repository" placeholder="Repository" value=project.repository onChange=(action (mut project.repository))}}
+            </div>
+        </div>
+
+        <div class="layout-row">
+            <div class="flex"></div>
+            <div class="layout-column">
+                {{#paper-button disabled=dialogNotValid raised=true primary=true onClick=(action "saveProject")}}Save{{/paper-button}}
+            </div>
+        </div>
+
+    </div>
+{{/paper-content}}
