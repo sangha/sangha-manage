@@ -1,0 +1,114 @@
+{{#page-toolbar}}
+    <h2>
+        {{project.name}}
+    </h2>
+{{/page-toolbar}}
+
+{{projects-menu currentRouteName='projects.show' project=project.id}}
+
+{{#paper-content class="md-padding"}}
+    <div class="layout-row layout-margin">
+        <div class="layout-column flex">
+            <div class="layout-row layout-margin">
+                <div class="layout-column">
+                    <img src={{project.logo}} height=96>
+                </div>
+                <div class="layout-column layout-align-center">
+                    <strong>{{project.summary}}</strong>
+                    <br />
+                    <a href="{{project.website}}">{{project.website}}</a>
+                    Transaction Code: {{project.budget_root.code}}
+                </div>
+            </div>
+            {{#paper-card}}
+                {{#paper-toolbar}}
+                    {{#paper-toolbar-tools}}
+                        <h2>Budgets</h2>
+                        <span class="flex"></span>
+                        {{#paper-button mini=true aria-label="New Budget" onClick=(action "openNewBudgetDialog")}}
+                            {{paper-icon "add"}}
+                        {{/paper-button}}
+                    {{/paper-toolbar-tools}}
+                {{/paper-toolbar}}
+                {{#paper-card-content}}
+                    {{#paper-list}}
+                        {{#each budgets as |budget|}}
+                            {{#paper-item class="md-3-line md-long-text" onClick=(action "goToBudget" budget) as |controls|}}
+                                <div class="md-list-item-text">
+                                    <h3>{{budget.name}}</h3>
+                                    <p>{{budget.description}}</p>
+                                </div>
+                                <div class="md-secondary-container">
+                                    <h4>{{format-money (div budget.balance 100) symbol="€" format="%v %s"}}</h4>
+                                </div>
+                            {{/paper-item}}
+                        {{/each}}
+
+                    {{/paper-list}}
+
+                    {{paper-divider}}
+
+                    <div class="layout-row layout-padding">
+                        <div class="flex">
+                            <h3>Total</h3>
+                        </div>
+                        <div class="layout-column layout-align-center-end">
+                            <h3>
+                                {{format-money (div project.balance 100) symbol="€" format="%v %s"}}
+                            </h3>
+                        </div>
+                    </div>
+
+                {{/paper-card-content}}
+            {{/paper-card}}
+
+            {{#paper-card}}
+                {{#paper-toolbar}}
+                    {{#paper-toolbar-tools}}
+                        <h2>Recent Transactions</h2>
+                    {{/paper-toolbar-tools}}
+                {{/paper-toolbar}}
+                {{#paper-card-content}}
+
+                    {{#paper-list}}
+                        {{#each transactions as |transaction|}}
+                            {{transaction-item transaction=transaction controller=this}}
+                            {{else}}
+                                {{#paper-item}}No recent transactions found.{{/paper-item}}
+                        {{/each}}
+                    {{/paper-list}}
+                {{/paper-card-content}}
+            {{/paper-card}}
+        </div>
+    </div>
+{{/paper-content}}
+
+{{#if showPromptDialog}}
+    {{#paper-dialog class="flex-30" fullscreen=true onClose=(action "closePromptDialog" "cancel") origin=dialogOrigin}}
+
+        {{#paper-dialog-content}}
+            <h2 class="md-title">Name for a new Budget</h2>
+            <p>Try to avoid generic Budget titles.</p>
+            <div class="layout-row flex">
+                <div class="layout-column flex">
+                    {{paper-input placeholder="New Budget" autofocus=true value=budgetName onChange=(action (mut budgetName))}}
+                </div>
+            </div>
+            <div class="layout-row flex">
+                <div class="layout-column flex">
+                    {{paper-input placeholder="Description" value=budgetDescription onChange=(action (mut budgetDescription))}}
+                </div>
+            </div>
+        {{/paper-dialog-content}}
+
+        {{#paper-dialog-actions class="layout-row"}}
+            <span class="flex"></span>
+            {{#paper-button onClick=(action "closePromptDialog" "cancel")}}Cancel{{/paper-button}}
+            {{#paper-button disabled=dialogNotValid raised=true primary=true onClick=(action "closePromptDialog" "ok")}}Create
+                Budget{{/paper-button}}
+        {{/paper-dialog-actions}}
+
+    {{/paper-dialog}}
+{{/if}}
+
+{{outlet}}
