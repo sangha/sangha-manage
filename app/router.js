@@ -10,6 +10,10 @@ Router.map(function () {
   this.route('projects', function () {
     this.route('all');
 
+    this.route('stats', {
+      path: '/:project_url/stats'
+    });
+
     this.route('settings', {
       path: '/*project_url/settings'
     });

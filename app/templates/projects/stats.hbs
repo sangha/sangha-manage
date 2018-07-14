@@ -1,0 +1,46 @@
+{{#page-toolbar}}
+    <h2>
+        {{#link-to "projects.show" project.id}}{{project.name}}{{/link-to}}
+        {{paper-icon "chevron-right"}}
+        Statistics
+    </h2>
+{{/page-toolbar}}
+
+{{projects-menu currentRouteName='projects.stats' project=project.id}}
+
+{{#paper-tabs center=true
+  stretch=true
+  borderBottom=true
+  selected=selectedTab
+  onChange=(action (mut selectedTab)) as |tabs|}}
+    {{#tabs.tab}}
+        Balance History
+    {{/tabs.tab}}
+    {{#tabs.tab}}
+        Budget Composition
+    {{/tabs.tab}}
+    {{#tabs.tab}}
+        Balance Projection
+    {{/tabs.tab}}
+    {{#tabs.tab}}
+        Donors
+    {{/tabs.tab}}
+{{/paper-tabs}}
+
+{{#paper-content class="md-padding"}}
+    {{#liquid-bind (hash tab=selectedTab) class="md-padding" as |current|}}
+        <div class="layout-row layout-margin">
+            <div class="layout-column layout-align-center flex">
+                {{#if (eq current.tab 0)}}
+                    {{time-series-chart class="flex" lineData=historyChart selectedSeedColor="#395839"}}
+                {{/if}}
+                {{#if (eq current.tab 1)}}
+                    {{pie-chart class="flex" data=budgetChart selectedSeedColor="#395839"}}
+                {{/if}}
+                {{#if (eq current.tab 2)}}
+                    {{time-series-chart class="flex" lineData=projectionChart selectedSeedColor="#395839"}}
+                {{/if}}
+            </div>
+        </div>
+    {{/liquid-bind}}
+{{/paper-content}}
