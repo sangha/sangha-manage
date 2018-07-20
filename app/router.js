@@ -14,6 +14,14 @@ Router.map(function () {
       path: '/:project_url/stats'
     });
 
+    this.route('budgets', {
+      path: '/:project_url/budgets'
+    }, function () {
+      this.route('show', {
+        path: '/*budget_url'
+      });
+    });
+
     this.route('settings', {
       path: '/*project_url/settings'
     });

@@ -1,0 +1,125 @@
+{{#page-toolbar}}
+    <h2>
+        {{#link-to "projects.show" budget.project.id}}{{budget.project.name}}{{/link-to}}
+        {{paper-icon "chevron-right"}}
+        {{#link-to "projects.show" budget.project.id}}Budgets{{/link-to}}
+        {{paper-icon "chevron-right"}}
+        {{budget.name}}
+    </h2>
+    <span class="flex"></span>
+    {{#paper-button mini=true aria-label="Transfer Money" onClick=(action "openTransferDialog")}}
+        {{paper-icon "assignment"}}
+    {{/paper-button}}
+    {{#paper-button mini=true aria-label="Delete Budget" onClick=(action "openDeleteBudgetDialog")}}
+        {{paper-icon "delete"}}
+    {{/paper-button}}
+{{/page-toolbar}}
+
+{{projects-menu currentRouteName='projects.show' project=budget.project.id}}
+
+{{#paper-content class="md-padding" }}
+    <div class="layout-row layout-margin">
+        <div class="layout-column flex">
+            <div class="layout-row layout-align-center-end layout-margin">
+                {{paper-input textarea=true placeholder="Filter" value=filterTerm onChange=(action "changeFilter")}}
+                <div class="flex"></div>
+                {{paper-pikaday class="flex-15" value=fromDate useUTC=false useISODate=false format='YYYY-MM-DD' label='From Date' yearRange='2018,currentYear' onChange=(action "changeFromDate")}}
+                {{paper-pikaday class="flex-15" value=toDate useUTC=false useISODate=false format='YYYY-MM-DD' label='To Date' yearRange='2018,currentYear' onChange=(action "changeToDate")}}
+            </div>
+
+            <div class="layout-row md-padding">
+                <div>
+                    <strong>{{budget.name}}</strong>
+                    {{#if budget.description}} - {{budget.description}}{{/if}}
+                    <br />
+                    Transaction Code: {{budget.code}}
+                </div>
+                <div class="flex"></div>
+                <div class="layout-column layout-align-start-end">
+                    <h3>
+                        {{format-money (div budget.balance 100) symbol="€" format="%v %s"}}
+                    </h3>
+                </div>
+            </div>
+
+            {{paper-divider}}
+
+            <div>
+                {{#paper-list}}
+
+                    {{#each transactions as |transaction|}}
+                        {{transaction-item transaction=transaction controller=this}}
+                        {{else}}
+                            {{#paper-item}}No transactions found.{{/paper-item}}
+                    {{/each}}
+
+                {{/paper-list}}
+            </div>
+        </div>
+    </div>
+{{/paper-content}}
+
+{{#if showTransferDialog}}
+    {{#paper-dialog class="flex-30" fullscreen=true onClose=(action "closeTransferDialog" "cancel") origin=dialogOrigin}}
+
+        {{#paper-dialog-content}}
+            <h2 class="md-title">Transfer Money</h2>
+            <p>Pick an amount (up to {{format-money (div budget.balance 100) symbol="€" format="%v %s"}}) and
+                destination budget.</p>
+            <div class="layout-column flex">
+                {{paper-input placeholder="Amount" autofocus=true value=transferAmount onChange=(action (mut transferAmount))}}
+            </div>
+            <div class="layout-column flex">
+                {{paper-input placeholder="Purpose" value=transferPurpose onChange=(action (mut transferPurpose))}}
+            </div>
+            <div class="layout-column flex">
+                {{#paper-autocomplete allowClear=false
+                                     options=searchList
+                                     selected=selectedBudget
+                                     placeholder="Destination Budget"
+                                     search=(action "searchBudgets")
+                                     searchField="name"
+                                     labelPath="name"
+                                     onSelectionChange=(action (mut selectedBudget)) as |budget autocomplete|}}
+                    {{paper-autocomplete-highlight label=budget.name
+                                        searchText=autocomplete.searchText
+                                        flags="i"}}
+                {{/paper-autocomplete}}
+            </div>
+        {{/paper-dialog-content}}
+
+        {{#paper-dialog-actions class="layout-row"}}
+            <span class="flex"></span>
+            {{#paper-button onClick=(action "closeTransferDialog" "cancel")}}Cancel{{/paper-button}}
+            {{#paper-button disabled=noValidTransfer raised=true primary=true onClick=(action "closeTransferDialog" "ok")}}Transfer
+                Money{{/paper-button}}
+        {{/paper-dialog-actions}}
+
+    {{/paper-dialog}}
+{{/if}}
+
+{{#if showDeleteDialog}}
+    {{#paper-dialog class="flex-50" onClose=(action "closeDeleteDialog" "cancel") origin=dialogOrigin clickOutsideToClose=true}}
+        <form>
+            {{#paper-toolbar}}
+                {{#paper-toolbar-tools}}
+                    <h2>Delete Budget</h2>
+                    <span class="flex"></span>
+                    {{#paper-button iconButton=true onClick=(action "closeDeleteDialog" "cancel")}}{{paper-icon icon="close"}}{{/paper-button}}
+                {{/paper-toolbar-tools}}
+            {{/paper-toolbar}}
+
+            {{#paper-dialog-content}}
+                <p>
+                    Are you absolutely sure you want to delete this Budget? This action is irreversible!
+                </p>
+            {{/paper-dialog-content}}
+
+            {{#paper-dialog-actions class="layout-row"}}
+                <span class="flex"></span>
+                {{#paper-button onClick=(action "closeDeleteDialog" "cancel")}}Cancel{{/paper-button}}
+                {{#paper-button onClick=(action "closeDeleteDialog" "ok")}}Delete Budget{{/paper-button}}
+            {{/paper-dialog-actions}}
+        </form>
+    {{/paper-dialog}}
+{{/if}}
