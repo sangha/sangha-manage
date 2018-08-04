@@ -1,0 +1,19 @@
+{{#page-toolbar}}
+    <h2>
+        Login
+    </h2>
+{{/page-toolbar}}
+
+<div class="layout-row layout-margin">
+    <span class="flex"></span>
+    {{#paper-form class="flex-40" onSubmit=(action "authenticate") as |form|}}
+        <div class="layout-column layout-align-center">
+            {{form.input label="Username" value=identification onChange=(action (mut identification)) required=true}}
+            {{form.input label="Password" value=password onChange=(action (mut password)) required=true}}
+        </div>
+        <div class="layout-row layout-align-center">
+            {{#form.submit-button raised=true primary=true}}Login{{/form.submit-button}}
+        </div>
+    {{/paper-form}}
+    <span class="flex"></span>
+</div>
