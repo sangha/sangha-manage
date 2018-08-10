@@ -32,6 +32,11 @@ Router.map(function () {
       path: '/:project_url'
     });
   });
+
+  this.route('payments', function () {
+    this.route('pending');
+    this.route('outgoing');
+  });
 });
 
 export default Router;

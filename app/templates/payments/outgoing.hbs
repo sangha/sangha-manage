@@ -1,0 +1,32 @@
+{{#page-toolbar}}
+    <h2>
+        {{#link-to "payments.outgoing"}}Pending Payments{{/link-to}}
+        {{paper-icon "chevron-right"}}
+        Outgoing
+    </h2>
+{{/page-toolbar}}
+
+{{#paper-content}}
+    <div>
+        {{#paper-list}}
+
+            {{#each payments as |payment|}}
+                {{#paper-item class="md-3-line md-long-text" onClick=(action "goToPayment" payment) as |controls|}}
+                    {{paper-icon "assignment_return" size=48}}
+                    <div class="md-list-item-text">
+                        <h3>{{payment.remote_name}}</h3>
+                        <h4>{{payment.remote_account}}</h4>
+                        <p>{{payment.purpose}}</p>
+                        <p>{{payment.created_at}}</p>
+                    </div>
+                    <div class="md-secondary-container">
+                        <h4>{{format-money (div payment.amount 100) symbol="€" format="%v %s"}}</h4>
+                    </div>
+                {{/paper-item}}
+                {{else}}
+                    {{#paper-item}}No pending payments found. Good job!{{/paper-item}}
+            {{/each}}
+
+        {{/paper-list}}
+    </div>
+{{/paper-content}}
