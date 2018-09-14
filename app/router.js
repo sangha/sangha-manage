@@ -35,6 +35,9 @@ Router.map(function () {
 
   this.route('payments', function () {
     this.route('pending');
+    this.route('show', {
+      path: '/*id'
+    });
     this.route('outgoing');
   });
 });

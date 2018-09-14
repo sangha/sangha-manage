@@ -1,0 +1,181 @@
+{{#page-toolbar}}
+    <h2>
+        {{#if payment.pending}}
+            {{#if (gt payment.amount 0)}}
+                {{#link-to "payments.pending"}}Pending Payments{{/link-to}}
+            {{else}}
+                {{#link-to "payments.outgoing"}}Pending Payments{{/link-to}}
+            {{/if}}
+        {{else}}
+            Payments
+        {{/if}}
+        {{paper-icon "chevron-right"}}
+        {{#if (gt payment.amount 0)}}
+            Incoming
+        {{else}}
+            Outgoing
+        {{/if}}
+    </h2>
+{{/page-toolbar}}
+
+{{#paper-content class="md-padding" }}
+    <div class="layout-row layout-margin">
+        <div class="layout-column flex">
+            {{#paper-card}}
+                {{#paper-toolbar}}
+                    {{#paper-toolbar-tools}}
+                        {{#if (gt payment.amount 0)}}
+                            {{paper-icon "assignment_turned_in"}}
+                        {{else}}
+                            {{paper-icon "assignment_return"}}
+                        {{/if}}
+                        <h2>{{payment.remote_name}}</h2>
+                        <span class="flex"></span>
+                        {{format-money (div payment.amount 100) symbol="€" format="%v %s"}}
+                    {{/paper-toolbar-tools}}
+                {{/paper-toolbar}}
+                {{#paper-card-content}}
+                    <div class="layout-row">
+                        <div class="flex">
+                            {{#if payment.remote_account}}
+                                <div>
+                                    <strong>Account:</strong>
+                                    {{#link-to "donors.show" payment.remote_account}}{{payment.remote_account}}{{/link-to}}
+                                    ({{payment.remote_bank_id}})
+                                </div>
+                            {{/if}}
+                            <div>
+                                <strong>Purpose:</strong> {{newline-br text=payment.purpose}}
+                            </div>
+                        </div>
+                        <div class="layout-column layout-align-start-end">
+                            <small>{{payment.created_at}}</small>
+                            {{moment-from-now payment.created_at}}
+                        </div>
+                    </div>
+
+                {{/paper-card-content}}
+            {{/paper-card}}
+
+            <p />
+
+            <div class="md-padding">
+                <div class="layout-row">
+                    <div class="flex">
+                        <b>Payment Code</b>
+                    </div>
+                </div>
+                {{paper-divider}}
+                {{#if checking}}
+                    <div class="flex">
+                        {{paper-progress-linear}}
+                    </div>
+                {{/if}}
+
+                {{#unless payment.code}}
+                    {{#if payment.pending}}
+                        <div class="layout-row flex">
+                            <div class="layout-column flex-70">
+                                <div class="flex md-padding">
+                                    No payment code detected. Please assign one!
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/unless}}
+                <div class="layout-row">
+                    <div class="md-padding flex">
+                        {{#paper-autocomplete disabled=disableCodeEdit
+                                     allowClear=false
+                                     options=searchList
+                                     selected=selectedBudget
+                                     placeholder=payment.code.token
+                                     search=(action "searchBudgets")
+                                     searchField="name"
+                                     labelPath="name"
+                                     onSelectionChange=(action (mut selectedBudget)) as |budget autocomplete|}}
+                            {{paper-autocomplete-highlight label=budget.name
+                                        searchText=autocomplete.searchText
+                                        flags="i"}}
+                        {{/paper-autocomplete}}
+                    </div>
+                    {{#unless disableCodeEdit}}
+                        <div class="md-padding">
+                            {{#paper-button disabled=noSelectedBudget raised=false onClick=(action "changeCode")}}Change{{/paper-button}}
+                            {{#paper-button raised=true primary=true onClick=(action "cancelEditCode")}}Cancel{{/paper-button}}
+                        </div>
+                    {{else}}
+                        {{#if payment.pending}}
+                            <div class="md-padding">
+                                {{#paper-button raised=true primary=true onClick=(action "editCode")}}Edit{{/paper-button}}
+                            </div>
+                        {{/if}}
+                    {{/unless}}
+                </div>
+
+                <p />
+                <div class="layout-column">
+                    <div class="flex">
+                        <b>Distribution</b>
+                    </div>
+                    {{paper-divider}}
+                    {{#if payment.code.id}}
+                        {{#paper-list}}
+
+                            {{#each budgetRatios as |budget|}}
+                                {{#paper-item class="md-2-line md-long-text" as |controls|}}
+                                    <div class="md-list-item-text">
+                                        <h3>Transfer {{#if (gt payment.amount 0)}}to{{else}}from{{/if}}
+                                            {{budget.project}} - {{budget.budget}}</h3>
+                                        <p>Fee:
+                                            {{#if (gt budget.fee 0)}}
+                                                {{format-money budget.fee symbol="€" format="%v %s"}} ({{budget.cut}}%
+                                                of {{format-money budget.grossamount symbol="€" format="%v %s"}})
+                                            {{else}}
+                                                No fees involved
+                                            {{/if}}
+                                        </p>
+                                    </div>
+                                    <div class="md-secondary-container">
+                                        <h4>{{format-money budget.amount symbol="€" format="%v %s"}}</h4>
+                                    </div>
+                                {{/paper-item}}
+                            {{/each}}
+
+                        {{/paper-list}}
+                    {{else}}
+                        <div class="flex md-padding">
+                            No code detected or selected.
+                        </div>
+                    {{/if}}
+                </div>
+
+                {{#if (gt payment.amount 0)}}
+
+                    <p />
+                    <div class="layout-column">
+                        <div class="flex">
+                            <b>Donor Information</b>
+                        </div>
+                        {{paper-divider}}
+                        <div class="flex md-padding">
+                            No sangha user is associated with this payment and therefore no donation receipt can be
+                            generated.
+                        </div>
+                    </div>
+
+                {{/if}}
+
+                {{#if payment.pending}}
+                    <p />
+                    <div class="layout-row layout-align-end-center">
+                        {{#paper-button disabled=noCode onClick=(action "approvePayment") raised=true primary=true}}Approve
+                            Payment{{/paper-button}}
+                        {{#paper-button raised=true warn=true disabled=true}}Reject{{/paper-button}}
+                    </div>
+                {{/if}}
+
+            </div>
+        </div>
+    </div>
+{{/paper-content}}
