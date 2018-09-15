@@ -40,6 +40,12 @@ Router.map(function () {
     });
     this.route('outgoing');
   });
+
+  this.route('transactions', function () {
+    this.route('show', {
+      path: '/*id'
+    });
+  });
 });
 
 export default Router;

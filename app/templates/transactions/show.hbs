@@ -1,0 +1,53 @@
+{{#page-toolbar}}
+    <h2>
+        Transactions
+    </h2>
+{{/page-toolbar}}
+
+{{#paper-content class="md-padding" }}
+    <div class="layout-row layout-margin">
+        <div class="layout-column flex">
+            {{#paper-card}}
+                {{#paper-toolbar}}
+                    {{#paper-toolbar-tools}}
+                        {{#if (or transaction.from_budget_id.name transaction.to_budget_id.name)}}
+                            {{#if transaction.from_budget_id.name}}
+                                {{paper-icon "assignment_turned_in"}}
+                                <h2>Received from {{transaction.from_budget_id.name}}</h2>
+                            {{else if transaction.to_budget_id.name}}
+                                {{paper-icon "assignment_return"}}
+                                <h2>Sent to {{transaction.to_budget_id.name}}</h2>
+                            {{/if}}
+                        {{else}}
+                            <h2>External payment</h2>
+                        {{/if}}
+                        <span class="flex"></span>
+                        {{format-money (div transaction.amount 100) symbol="€" format="%v %s"}}
+                    {{/paper-toolbar-tools}}
+                {{/paper-toolbar}}
+                {{#paper-card-content}}
+                    <div class="layout-row">
+                        <div class="flex">
+                            <div>
+                                {{#if transaction.payment_id}}
+                                    <strong>Payment:</strong> {{#link-to "payments.show" transaction.payment_id.id}} #{{transaction.payment_id.id}}
+                                        ({{moment-from-now transaction.payment_id.created_at}}){{/link-to}}
+                                {{else}}
+                                    <strong>Payment:</strong> Internal Transaction
+                                {{/if}}
+                            </div>
+                            <div>
+                                <strong>Purpose:</strong> {{newline-br text=transaction.purpose}}
+                            </div>
+                        </div>
+                        <div class="layout-column layout-align-start-end">
+                            <small>{{transaction.created_at}}</small>
+                            {{moment-from-now transaction.created_at}}
+                        </div>
+                    </div>
+
+                {{/paper-card-content}}
+            {{/paper-card}}
+        </div>
+    </div>
+{{/paper-content}}
