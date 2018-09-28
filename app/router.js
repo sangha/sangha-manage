@@ -41,6 +41,12 @@ Router.map(function () {
     this.route('outgoing');
   });
 
+  this.route('donors', function () {
+    this.route('show', {
+      path: '/*id'
+    });
+  });
+
   this.route('transactions', function () {
     this.route('show', {
       path: '/*id'
