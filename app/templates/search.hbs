@@ -1,0 +1,24 @@
+{{#page-toolbar}}
+    <h2>
+        Search
+    </h2>
+{{/page-toolbar}}
+
+{{#paper-content class="md-padding" }}
+    <div class="layout-column flex">
+        {{#paper-form onSubmit=(action "searchAction") as |form|}}
+            <div class="layout-row flex">
+                <div class="layout-column flex-30">
+                    {{form.input label="Search" icon="search" value=term onChange=(action (mut term))}}
+                </div>
+                <div class="flex-5"></div>
+                <div class="layout-column layout-align-start">
+                    {{#form.submit-button raised=true primary=true}}Search{{/form.submit-button}}
+                </div>
+            </div>
+        {{/paper-form}}
+    </div>
+
+    {{outlet}}
+
+{{/paper-content}}

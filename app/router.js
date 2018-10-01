@@ -33,6 +33,12 @@ Router.map(function () {
     });
   });
 
+  this.route('search', function () {
+    this.route('term', {
+      path: '/*term'
+    });
+  });
+
   this.route('payments', function () {
     this.route('pending');
     this.route('show', {
