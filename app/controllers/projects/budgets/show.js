@@ -9,13 +9,17 @@ import {
 export default Controller.extend({
   notifications: service('notification-manager'),
 
+  init() {
+    this._super(...arguments);
+    this.searchList = [];
+  },
+
   fromDate: null,
   toDate: null,
   filterTerm: "",
 
   transferAmount: null,
   transferPurpose: null,
-  searchList: [],
   prevBudget: "",
   selectedBudget: null,
 

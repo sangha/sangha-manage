@@ -9,6 +9,11 @@ import {
 export default Controller.extend({
   notifications: service('notification-manager'),
 
+  init() {
+    this._super(...arguments);
+    this.searchList = [];
+  },
+
   budgetRatios: computed('payment.code.budgets', function () {
     var data = [];
     var rs = this.payment.get('code').get('ratios');
@@ -44,7 +49,6 @@ export default Controller.extend({
     return this.selectedBudget == null || this.selectedBudget.code == undefined;
   }),
 
-  searchList: [],
   prevBudget: "",
   selectedBudget: null,
   disableCodeEdit: true,
