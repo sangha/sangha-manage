@@ -5,8 +5,6 @@ import Controller from '@ember/controller';
 import {
   inject as service
 } from '@ember/service';
-import PieChartComponent from 'ember-charts/components/pie-chart';
-import TimeSeriesChartComponent from 'ember-charts/components/time-series-chart';
 
 export default Controller.extend({
   router: service(),
@@ -34,7 +32,6 @@ export default Controller.extend({
   historyChart: computed('statistics', function () {
     var data = [];
 
-    var p = this.project;
     var s = this.statistics[0];
     var pm = s.get('past_months');
 

@@ -31,8 +31,6 @@ export default Controller.extend({
   }),
 
   filter() {
-    var ts = this.transactions;
-
     this.store.query('transaction', {
       budget: this.get('budget.id'),
       search: this.filterTerm,
