@@ -127,7 +127,7 @@ export default Controller.extend({
           this.notifications.show('Deleted budget ' + budget.get('name'));
         },
         error => {
-          budget.rollbackAttributes();
+          this.budget.rollbackAttributes();
           alert(`Failed deleting budget: ` + error.errors[0].detail);
         }
       );
