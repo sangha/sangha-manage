@@ -59,11 +59,11 @@ export default Controller.extend({
 
     var p = this.project;
     var s = this.statistics[0];
-    var pm = s.get('past_months');
+    var pm = s.get('past_months')
 
     var dt = new Date();
-    for (var i = Math.min(12, pm.length - 1); i > 0; i--) {
-      var ddt = new Date(dt.getFullYear(), dt.getMonth() - i + 1, 1);
+    for (let i = Math.min(12, pm.length - 1); i > 0; i--) {
+      let ddt = new Date(dt.getFullYear(), dt.getMonth() - i + 1, 1);
       data.push({
         time: ddt,
         value: pm[i] / 100,
@@ -82,8 +82,8 @@ export default Controller.extend({
       label: 'Projection'
     });
 
-    for (var i = 0; i < 12; i++) {
-      var ddt = new Date(dt.getFullYear(), dt.getMonth() + i + 1, 1);
+    for (let i = 0; i < 12; i++) {
+      let ddt = new Date(dt.getFullYear(), dt.getMonth() + i + 1, 1);
 
       data.push({
         time: ddt,
