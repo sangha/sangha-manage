@@ -14,7 +14,7 @@ export default DS.Transform.extend({
       return deserialized
     } else if (type == 'string') {
       return deserialized.split(',').map(function (item) {
-        return jQuery.trim(item);
+        return item.trim();
       });
     } else {
       return [];
