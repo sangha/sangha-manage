@@ -72,7 +72,7 @@ export default Controller.extend({
           this.set('searchList', ps);
         },
         error => {
-          alert("Couldn't find budget: " + term);
+          alert("Couldn't find budget: " + term + ": " + error);
         }
       )
     },

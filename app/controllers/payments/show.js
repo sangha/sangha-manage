@@ -78,7 +78,7 @@ export default Controller.extend({
           this.set('checking', false);
         },
         error => {
-          alert("Couldn't find code " + budget.code);
+          alert("Couldn't find code " + budget.code + ": " + error);
           this.set('checking', false);
         }
       );
@@ -103,7 +103,7 @@ export default Controller.extend({
           this.set('searchList', ps);
         },
         error => {
-          alert("Couldn't find budget (by name or code): " + term);
+          alert("Couldn't find budget (by name or code): " + term + ": " + error);
         }
       )
     },
