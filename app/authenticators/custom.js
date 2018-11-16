@@ -47,7 +47,7 @@ export default Base.extend({
   },
 
   invalidate: function () {
-    console.log('invalidating login...');
+    // console.log('invalidating login...');
     return resolve();
   }
 });
